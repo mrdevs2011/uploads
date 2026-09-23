@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SavingTime</title>
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+  <!-- MODE TOGGLE: CENTRAL vs THIS CHAT -->
+  <div class="mode-bar">
+    <div class="mode-buttons">
+      <button id="modeBtn-central" class="mode-btn mode-btn-active" data-mode="central">
+        <span class="mode-label">CENTRAL</span>
+      </button>
+      <button id="modeBtn-thischat" class="mode-btn" data-mode="thischat">
+        <span class="mode-label">THIS CHAT</span>
+      </button>
+    </div>
+    <div id="modeInfo" class="mode-info">
+      <span id="modeInfoText">Chrome storage - barcha saytlarda</span>
+    </div>
+  </div>
+
+  <div class="tabbar" id="tabbar">
+    <div class="tabs" id="tabs"></div>
+    <button id="addTabBtn" class="tab-add" title="New">+</button>
+  </div>
+  <div class="subtabs" id="subtabs" hidden></div>
+
+  <div class="wrap">
+    <section id="viewEmpty">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" class="empty-icon"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+        <p class="empty-title">Hozircha bo'sh</p>
+        <p class="empty-sub">Yangi loyiha ochish uchun yuqoridagi <span class="empty-plus">+</span> tugmasini bosing</p>
+      </div>
+    </section>
+
+    <section id="viewProject" hidden>
+      <div class="log-title">Operators</div>
+      <div class="ops-row ops-row-top">
+        <button id="addStepBtn" class="ghost icon-btn" title="Add"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+        <button id="runBtn" class="primary icon-btn ops-row-end" title="Execute"><svg id="runBtnIcon" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></svg></button>
+      </div>
+      <div id="stepList" class="list"></div>
+    </section>
+
+    <section id="viewStep" hidden>
+      <button id="backProject" class="linkish icon-btn" title="Back"><svg viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
+      <h2 id="stepTitle">Operator</h2>
+
+      <label for="stepLabel">Identifier</label>
+      <input type="text" id="stepLabel" placeholder="Click" />
+
+      <div id="coordFields" style="margin-bottom: 10px;">
+        <div class="row2">
+          <div>
+            <label for="stepX">X</label>
+            <input type="number" id="stepX" placeholder="0" />
+          </div>
+          <div>
+            <label for="stepY">Y</label>
+            <input type="number" id="stepY" placeholder="0" />
+          </div>
+        </div>
+      </div>
+
+      <div id="pickFields" class="pick-row">
+        <button id="pickBtn" class="ghost icon-btn" title="Capture"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="22" x2="18" y1="12" y2="12"/><line x1="6" x2="2" y1="12" y2="12"/><line x1="12" x2="12" y1="6" y2="2"/><line x1="12" x2="12" y1="22" y2="18"/></svg></button>
+        <button id="tableFieldBtn" class="ghost icon-btn" title="Table field"><svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></button>
+        <div id="pickStatus" class="status warn"></div>
+        <button id="saveStepBtn" class="primary icon-btn pick-row-end" title="Confirm"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
+      </div>
+
+      <div id="tableFieldSection" class="field-block" hidden>
+        <div class="settings-tabs" id="tableFieldModeTabs" role="tablist" style="padding:0;margin:0 0 10px;">
+          <button type="button" class="settings-tab active" data-mode="normal" role="tab" aria-selected="true">Oddiy</button>
+          <button type="button" class="settings-tab" data-mode="global" role="tab" aria-selected="false">Global</button>
+        </div>
+        <label for="tableFieldInput">Field nomi</label>
+        <input type="text" id="tableFieldInput" placeholder="Masalan: Ism" autocomplete="off" spellcheck="false" />
+        <div id="tableFieldGlobalValueWrap" hidden>
+          <label for="tableFieldGlobalValue" style="margin-top:10px">Global qiymat</label>
+          <input type="text" id="tableFieldGlobalValue" placeholder="Masalan: 2026-25-12" autocomplete="off" spellcheck="false" />
+          <p class="hint">Global field'lar hamma joyda shu bitta qiymatdan foydalanadi — JSON'da alohida * blokda ko'rsatiladi.</p>
+        </div>
+        <div id="tableFieldError" class="field-error" hidden></div>
+        <div class="tf-actions">
+          <button type="button" id="tableFieldOverwriteBtn" class="danger" hidden>Ustidan yozish</button>
+          <button type="button" id="tableFieldSaveBtn" class="primary">Save</button>
+        </div>
+      </div>
+
+      <div id="valueFieldWrap" hidden>
+        <div id="fieldHint" class="status ok"></div>
+        <label for="stepValue" id="stepValueLabel">Qiymat</label>
+        <input type="text" id="stepValue" placeholder="Kiritiladigan matn" />
+        <select id="stepValueSelect" hidden></select>
+      </div>
+    </section>
+
+    <div id="hiddenSettings" hidden>
+      <input type="number" id="speed" min="1" value="45" placeholder="45" />
+      <input type="number" id="countdown" min="0" value="3" placeholder="0" />
+      <input type="number" id="stepGap" min="0" value="0.3" placeholder="0.3" />
+      <select id="ocrMode">
+        <option value="ocrspace">OCR.space (bulut)</option>
+        <option value="tesseract">Tesseract.js (lokal)</option>
+      </select>
+      <input type="number" id="ocrScale" min="1" max="5" value="2" />
+      <input type="number" id="ocrThreshold" min="0" max="255" value="140" />
+    </div>
+  </div>
+
+  <!-- Footer: Settings -->
+  <footer class="app-footer" id="appFooter">
+    <button type="button" id="openSettingsBtn" class="footer-link">Settings</button>
+    <button type="button" id="getJsonBtn" class="footer-link">Get Json</button>
+    <button type="button" id="importJsonBtn" class="footer-link" disabled hidden>Import Json</button>
+  </footer>
+
+  <!-- Import Json — float oyna: drag&drop / fayl tanlash / Ctrl+V -->
+  <div id="importJsonModal" class="modal-overlay" hidden>
+    <div class="modal-card" role="dialog" aria-labelledby="importJsonTitle">
+      <h3 id="importJsonTitle">Import Json</h3>
+      <p class="modal-desc">JSON faylni shu yerga tashlang, tanlang yoki matnni nusxalab <span class="mono">Ctrl+V</span> bosing.</p>
+      <div id="importJsonDropzone" class="import-dropzone">
+        <span class="import-dropzone-icon">JSON</span>
+        <span class="import-dropzone-text">Faylni bu yerga tashlang</span>
+        <span class="import-dropzone-or">yoki</span>
+        <button type="button" id="importJsonBrowseBtn" class="dt-btn">Faylni tanlash</button>
+        <input type="file" id="importJsonFileInput" accept=".json,application/json" hidden />
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="importJsonCancelBtn">Bekor qilish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Birinchi kirish: Groq API key so'rovi -->
+  <div id="apiKeyPrompt" class="modal-overlay" hidden>
+    <div class="modal-card" role="dialog" aria-labelledby="apiKeyPromptTitle">
+      <h3 id="apiKeyPromptTitle">Groq API Key</h3>
+      <p class="modal-desc">Captcha va AI funksiyalar uchun Groq API kalitingizni kiriting. Bepul kalit: <span class="mono">console.groq.com</span></p>
+      <label for="apiKeyPromptInput">API Key</label>
+      <input type="password" id="apiKeyPromptInput" placeholder="gsk_..." autocomplete="off" spellcheck="false" />
+      <div id="apiKeyPromptError" class="field-error" hidden></div>
+      <div class="modal-actions">
+        <button type="button" id="apiKeyNotNowBtn" class="ghost">Not now</button>
+        <button type="button" id="apiKeySaveBtn" class="primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings panel -->
+  <div id="settingsPanel" class="modal-overlay" hidden>
+    <div class="modal-card settings-card" role="dialog" aria-labelledby="settingsTitle">
+      <div class="settings-header">
+        <h3 id="settingsTitle">Settings</h3>
+        <button type="button" id="closeSettingsBtn" class="ghost icon-btn" title="Close">
+          <svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="settings-tabs" role="tablist">
+        <button type="button" class="settings-tab active" data-tab="run" role="tab" aria-selected="true">Run</button>
+        <button type="button" class="settings-tab" data-tab="sound" role="tab" aria-selected="false">Sound</button>
+        <button type="button" class="settings-tab" data-tab="api" role="tab" aria-selected="false">API</button>
+      </div>
+      <div class="settings-body">
+        <!-- Run -->
+        <div id="settingsTabRun" class="settings-tab-panel" role="tabpanel">
+          <div class="settings-field">
+            <label for="settingsSpeed">Yozish tezligi (ms)</label>
+            <input type="number" id="settingsSpeed" min="5" max="500" step="5" value="45" />
+            <p class="hint">Har bir belgi orasidagi kutish. Kichikroq = tezroq (tavsiya: 30–60).</p>
+          </div>
+          <div class="settings-field">
+            <label for="settingsDelay">Boshlash oldidan kutish (soniya)</label>
+            <input type="number" id="settingsDelay" min="0" max="30" step="1" value="3" />
+            <p class="hint">Execute bosilgandan keyin ishga tushishdan oldin countdown.</p>
+          </div>
+          <div class="settings-field">
+            <label for="settingsStepGap">Harakatlar orasidagi masofa (soniya)</label>
+            <input type="number" id="settingsStepGap" min="0" max="10" step="0.1" value="0.3" />
+            <p class="hint">Har bir bosish/to'ldirishdan keyin keyingi harakatgacha kutish. Kichikroq = tezroq, lekin sekin sahifalarda xato ko'proq chiqishi mumkin.</p>
+          </div>
+          <div class="modal-actions">
+            <button type="button" id="settingsRunSave" class="primary">Save</button>
+          </div>
+        </div>
+        <!-- Sound -->
+        <div id="settingsTabSound" class="settings-tab-panel" role="tabpanel" hidden>
+          <label class="settings-check">
+            <input type="checkbox" id="settingsSoundClick" checked />
+            <span>Click tovushi</span>
+          </label>
+          <p class="hint">Har bir bosishda qisqa click ovozi.</p>
+          <label class="settings-check">
+            <input type="checkbox" id="settingsSoundType" checked />
+            <span>Yozish tovushi</span>
+          </label>
+          <p class="hint">Matn kiritish paytida type ovozi.</p>
+          <div class="modal-actions">
+            <button type="button" id="settingsSoundSave" class="primary">Save</button>
+          </div>
+        </div>
+        <!-- API -->
+        <div id="settingsTabApi" class="settings-tab-panel" role="tabpanel" hidden>
+          <label for="settingsApiKey">Groq API Key</label>
+          <div class="api-key-row">
+            <input type="password" id="settingsApiKey" placeholder="gsk_..." autocomplete="off" spellcheck="false" />
+            <button type="button" id="toggleApiKeyVisibility" class="ghost icon-btn" title="Ko'rsatish / yashirish">
+              <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <label for="settingsGroqModel" style="margin-top:12px">Model</label>
+          <input type="text" id="settingsGroqModel" value="qwen/qwen3.8-27b" readonly />
+          <p class="hint">Kalit faqat qurilmangizda saqlanadi. Captcha uchun kerak: <span class="mono">console.groq.com</span></p>
+          <div id="settingsApiKeyStatus" class="status"></div>
+          <div class="modal-actions">
+            <button type="button" id="settingsApiKeyClear" class="ghost">O'chirish</button>
+            <button type="button" id="settingsApiKeySave" class="primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

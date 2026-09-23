@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Inspector // Dev Edition</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-mono);
+    }
+
+    html, body {
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .app-container {
+      width: 98%;
+      max-width: 1000px;
+      height: 96vh;
+      max-height: 750px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .window-header {
+      background-color: #010409;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--border);
+    }
+
+    .main-layout {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 12px;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 700px) {
+      .main-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+      }
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      background-color: var(--bg);
+      border-radius: 4px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .panel-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+    }
+
+    .preview-box {
+      flex: 1;
+      min-height: 60px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+      margin-bottom: 10px;
+      transition: background-color 0.15s ease;
+    }
+
+    .input-group {
+      margin-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: 6px 8px;
+      font-size: 0.85rem;
+      border-radius: 3px;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--accent);
+    }
+
+    button {
+      background-color: var(--border);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: var(--accent);
+      color: var(--bg);
+    }
+
+    .image-container {
+      flex: 1;
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background-color: rgba(255, 255, 255, 0.01);
+      cursor: crosshair;
+      width: 100%;
+      height: 100%;
+      touch-action: none; /* Mobilda sahifa surilib ketmasligi uchun */
+    }
+
+    .image-container.drag-over {
+      border-color: var(--accent);
+      background-color: rgba(88, 166, 255, 0.05);
+    }
+
+    .upload-placeholder {
+      text-align: center;
+      padding: 10px;
+      pointer-events: none;
+    }
+
+    .upload-placeholder p {
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .upload-placeholder span {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      display: block;
+    }
+
+    #canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: none;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .output-details {
+      margin-top: 8px;
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .output-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .color-swatch {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background-color: #58A6FF;
+    }
+
+    .output-info {
+      font-size: 0.75rem;
+      line-height: 1.3;
+    }
+
+    .output-info span {
+      color: var(--accent);
+    }
+
+    .reupload-btn {
+      font-size: 0.65rem;
+      padding: 4px 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <div class="window-header">
+      <div class="window-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div>COLOR_INSPECTOR.EXE</div>
+      <div>v1.5.0</div>
+    </div>
+
+    <div class="main-layout">
+      <!-- PANEL 1: MANUAL CONVERTER -->
+      <div class="panel">
+        <div class="panel-title">// 01_MANUAL_CONVERTER</div>
+        
+        <div class="preview-box" id="previewBox" style="background-color: #58A6FF;">
+          <span id="previewText">#58A6FF</span>
+        </div>
+
+        <div>
+          <div class="input-group">
+            <label for="hexInput">HEX_VALUE:</label>
+            <div class="input-row">
+              <input type="text" id="hexInput" value="#58A6FF" autocomplete="off">
+              <button onclick="copyValue('hexInput')">COPY</button>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="rgbInput">RGB_VALUE:</label>
+            <div class="input-row">
+              <input type="text" id="rgbInput" value="rgb(88, 166, 255)" autocomplete="off">
+              <button onclick="copyValue('rgbInput')">COPY</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 2: IMAGE INSPECTOR -->
+      <div class="panel">
+        <div class="panel-title">// 02_IMAGE_INSPECTOR</div>
+        
+        <div class="image-container" id="imageContainer">
+          <div class="upload-placeholder" id="placeholder">
+            <p>[UPLOAD_IMAGE]</p>
+            <span>DROP FILE / CLICK / CTRL+V</span>
+          </div>
+          <canvas id="canvas"></canvas>
+        </div>
+
+        <input type="file" id="imageInput" accept="image/*">
+
+        <div class="output-details">
+          <div class="output-left">
+            <div class="color-swatch" id="colorSwatch"></div>
+            <div class="output-info">
+              <div>HEX: <span id="outHex">#58A6FF</span></div>
+              <div>RGB: <span id="outRgb">rgb(88,166,255)</span></div>
+            </div>
+          </div>
+          <button class="reupload-btn" id="reuploadBtn" onclick="triggerFileInput()">NEW_IMAGE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const hexInput = document.getElementById('hexInput');
+    const rgbInput = document.getElementById('rgbInput');
+    const previewBox = document.getElementById('previewBox');
+    const previewText = document.getElementById('previewText');
+
+    const imageContainer = document.getElementById('imageContainer');
+    const placeholder = document.getElementById('placeholder');
+    const imageInput = document.getElementById('imageInput');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    const colorSwatch = document.getElementById('colorSwatch');
+    const outHex = document.getElementById('outHex');
+    const outRgb = document.getElementById('outRgb');
+
+    let loadedImage = null;
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
+      if (hex.length !== 6) return null;
+      const num = parseInt(hex, 16);
+      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+    }
+
+    function rgbToHex(r, g, b) {
+      return "#" + [r, g, b].map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      }).join('').toUpperCase();
+    }
+
+    hexInput.addEventListener('input', (e) => {
+      let hex = e.target.value.trim();
+      if (!hex.startsWith('#')) hex = '#' + hex;
+      const rgb = hexToRgb(hex);
+      if (rgb) {
+        rgbInput.value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        previewBox.style.backgroundColor = hex;
+        previewText.textContent = hex.toUpperCase();
+      }
+    });
+
+    rgbInput.addEventListener('input', (e) => {
+      const match = e.target.value.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
+      if (match) {
+        const r = parseInt(match[1]), g = parseInt(match[2]), b = parseInt(match[3]);
+        if (r <= 255 && g <= 255 && b <= 255) {
+          const hex = rgbToHex(r, g, b);
+          hexInput.value = hex;
+          previewBox.style.backgroundColor = hex;
+          previewText.textContent = hex;
+        }
+      }
+    });
+
+    function copyValue(id) {
+      const el = document.getElementById(id);
+      el.select();
+      navigator.clipboard.writeText(el.value);
+    }
+
+    function triggerFileInput() {
+      imageInput.click();
+    }
+
+    function updateSelectedColor(r, g, b) {
+      const hex = rgbToHex(r, g, b);
+      const rgbStr = `rgb(${r}, ${g}, ${b})`;
+
+      colorSwatch.style.backgroundColor = hex;
+      outHex.textContent = hex;
+      outRgb.textContent = rgbStr;
+
+      hexInput.value = hex;
+      rgbInput.value = rgbStr;
+      previewBox.style.backgroundColor = hex;
+      previewText.textContent = hex;
+    }
+
+    function processImage(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+
+      const img = new Image();
+      img.onload = function() {
+        loadedImage = img;
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+
+        placeholder.style.display = 'none';
+        canvas.style.display = 'block';
+
+        const x = Math.floor(img.width / 2);
+        const y = Math.floor(img.height / 2);
+        const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+        updateSelectedColor(r, g, b);
+      };
+      img.src = URL.createObjectURL(file);
+    }
+
+    // Koordinata bo'yicha rangni tekshirish funksiyasi
+    function pickColorAt(clientX, clientY) {
+      if (!loadedImage) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const clickX = clientX - rect.left;
+      const clickY = clientY - rect.top;
+
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+
+      const x = Math.floor(clickX * scaleX);
+      const y = Math.floor(clickY * scaleY);
+
+      if (x >= 0 && x < canvas.width && y >= 0 && y < canvas.height) {
+        const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+        updateSelectedColor(r, g, b);
+      }
+    }
+
+    // Rasm yuklanmagan bo'lsa, bosganda fayl tanlash
+    imageContainer.addEventListener('click', (e) => {
+      if (!loadedImage) {
+        triggerFileInput();
+      }
+    });
+
+    // Kompyuter uchun HOVER (mousemove) va CLICK hodisalari
+    imageContainer.addEventListener('mousemove', (e) => {
+      pickColorAt(e.clientX, e.clientY);
+    });
+
+    // Mobil qurilmalar uchun TOUCH hodisalari (Touch move/start)
+    imageContainer.addEventListener('touchstart', (e) => {
+      if (loadedImage && e.touches.length > 0) {
+        pickColorAt(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    imageContainer.addEventListener('touchmove', (e) => {
+      if (loadedImage && e.touches.length > 0) {
+        pickColorAt(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    imageInput.addEventListener('change', (e) => processImage(e.target.files[0]));
+
+    ['dragenter', 'dragover'].forEach(eName => {
+      imageContainer.addEventListener(eName, (e) => { 
+        e.preventDefault(); 
+        imageContainer.classList.add('drag-over'); 
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(eName => {
+      imageContainer.addEventListener(eName, (e) => { 
+        e.preventDefault(); 
+        imageContainer.classList.remove('drag-over'); 
+      });
+    });
+
+    imageContainer.addEventListener('drop', (e) => {
+      if (e.dataTransfer.files.length) processImage(e.dataTransfer.files[0]);
+    });
+
+    window.addEventListener('paste', (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+      for (let item of items) {
+        if (item.type.indexOf('image') !== -1) {
+          processImage(item.getAsFile());
+          break;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

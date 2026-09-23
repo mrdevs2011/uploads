@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disk Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◆</span>
+      <span class="brand-name">Disk Explorer</span>
+    </div>
+
+    <div class="controls">
+      <input id="pathInput" type="text" spellcheck="false" placeholder="/home/muhamad">
+      <div class="min-size">
+        <label for="minSize">min</label>
+        <input id="minSize" type="number" value="100" min="1" step="10">
+        <span>MB</span>
+      </div>
+      <button id="scanBtn">Skan qilish</button>
+    </div>
+  </header>
+
+  <nav id="breadcrumb" class="breadcrumb"></nav>
+
+  <main>
+    <div id="status" class="status"></div>
+    <div id="progressWrap" class="progress-wrap hidden">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+    <ul id="rows" class="rows"></ul>
+  </main>
+
+  <div id="confirmOverlay" class="overlay hidden">
+    <div class="confirm-box">
+      <p class="confirm-title">O'chirishga aminmisan?</p>
+      <p class="confirm-path" id="confirmPath"></p>
+      <p class="confirm-warning">Bu amalni ortga qaytarib bo'lmaydi.</p>
+      <div class="confirm-actions">
+        <button id="cancelDelete" class="btn-ghost">Bekor qilish</button>
+        <button id="okDelete" class="btn-danger">Ha, o'chir</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Quick Open</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="top">
+    <img class="logo" src="../icons/icon32.png" alt="">
+    <span class="title">quick-open</span>
+    <kbd class="hint">Ctrl+,</kbd>
+    <button id="btn-close" class="icon-btn" type="button" title="Close (Esc)" aria-label="Close">&#x2715;</button>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" type="button" role="tab" data-tab="url">url</button>
+    <button class="tab" type="button" role="tab" data-tab="file">file</button>
+  </nav>
+
+  <main>
+    <!-- bookmarks -->
+    <section id="view-main">
+      <button id="btn-new" class="btn-new" type="button">+ new bookmark</button>
+
+      <form id="form" class="form" hidden autocomplete="off" spellcheck="false">
+        <input id="f-value" type="text">
+        <input id="f-name" type="text" placeholder="name (optional)">
+        <div class="form-actions">
+          <button id="f-save" class="btn" type="submit">save</button>
+          <button id="f-cancel" class="btn ghost" type="button">cancel</button>
+        </div>
+      </form>
+
+      <ul id="list" class="list"></ul>
+      <p id="empty" class="empty" hidden></p>
+      <p id="msg" class="msg" hidden></p>
+    </section>
+
+    <!-- file manager (file tab only) -->
+    <section id="picker" class="picker" hidden>
+      <div class="pk-row">
+        <button id="pk-up" class="btn" type="button" title="Parent folder">..</button>
+        <input id="pk-path" type="text" spellcheck="false" autocomplete="off" placeholder="/">
+      </div>
+      <div class="pk-row">
+        <input id="pk-filter" type="text" spellcheck="false" autocomplete="off" placeholder="filter">
+        <button id="pk-cancel" class="btn ghost" type="button">cancel</button>
+      </div>
+      <ul id="pk-list" class="list"></ul>
+      <p id="pk-note" class="msg" hidden></p>
+      <div id="pk-access" class="access" hidden>
+        <p>File access is off. Turn on "Allow access to file URLs" for Quick Open, then reopen this popup.</p>
+        <div class="form-actions">
+          <button id="pk-settings" class="btn" type="button">open extension settings</button>
+          <button id="pk-cancel2" class="btn ghost" type="button">cancel</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File → Base64</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      background: #0d1117;
+      color: #c9d1d9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: #58a6ff;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .sub {
+      font-size: 0.8rem;
+      color: #8b949e;
+      margin-bottom: 32px;
+    }
+    #dropzone {
+      width: 100%;
+      max-width: 640px;
+      border: 1.5px dashed #30363d;
+      border-radius: 8px;
+      padding: 48px 24px;
+      text-align: center;
+      background: #161b22;
+      transition: border-color 0.15s, background 0.15s;
+      cursor: pointer;
+      user-select: none;
+    }
+    #dropzone:hover,
+    #dropzone.dragover {
+      border-color: #58a6ff;
+      background: #1c2128;
+    }
+    #dropzone.dragover {
+      border-style: solid;
+    }
+    #dropzone p {
+      font-size: 0.9rem;
+      color: #8b949e;
+      line-height: 1.6;
+    }
+    #dropzone .hint {
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: #484f58;
+    }
+    #file-input { display: none; }
+    #result {
+      width: 100%;
+      max-width: 640px;
+      margin-top: 24px;
+      display: none;
+    }
+    .meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 0.75rem;
+      color: #8b949e;
+      margin-bottom: 10px;
+    }
+    .meta span { color: #c9d1d9; }
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    button {
+      font-family: inherit;
+      font-size: 0.75rem;
+      padding: 6px 14px;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      background: #21262d;
+      color: #c9d1d9;
+      cursor: pointer;
+      transition: background 0.1s, border-color 0.1s;
+    }
+    button:hover {
+      background: #30363d;
+      border-color: #8b949e;
+    }
+    button.primary {
+      background: #238636;
+      border-color: #238636;
+      color: #fff;
+    }
+    button.primary:hover {
+      background: #2ea043;
+      border-color: #2ea043;
+    }
+    textarea {
+      width: 100%;
+      height: 280px;
+      font-family: inherit;
+      font-size: 0.7rem;
+      line-height: 1.5;
+      background: #0d1117;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 12px;
+      resize: vertical;
+      outline: none;
+    }
+    textarea:focus { border-color: #58a6ff; }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #238636;
+      color: #fff;
+      font-size: 0.8rem;
+      padding: 8px 20px;
+      border-radius: 6px;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <h1>file → base64</h1>
+  <p class="sub">Ctrl+V · drag & drop · click to browse</p>
+
+  <div id="dropzone">
+    <p>Drop a file here<br>or press <kbd>Ctrl</kbd>+<kbd>V</kbd><br>or click to select</p>
+    <p class="hint">any file type · max ~50 MB recommended</p>
+  </div>
+  <input type="file" id="file-input">
+
+  <div id="result">
+    <div class="meta">
+      <div>name: <span id="fname">—</span></div>
+      <div>size: <span id="fsize">—</span></div>
+      <div>type: <span id="ftype">—</span></div>
+    </div>
+    <div class="actions">
+      <button class="primary" id="copy-btn">Copy Base64</button>
+      <button id="clear-btn">Clear</button>
+    </div>
+    <textarea id="output" readonly placeholder="base64 will appear here..."></textarea>
+  </div>
+
+  <div class="toast" id="toast">Copied!</div>
+
+  <script>
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+    const result = document.getElementById('result');
+    const output = document.getElementById('output');
+    const fname = document.getElementById('fname');
+    const fsize = document.getElementById('fsize');
+    const ftype = document.getElementById('ftype');
+    const copyBtn = document.getElementById('copy-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const toast = document.getElementById('toast');
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / 1048576).toFixed(2) + ' MB';
+    }
+
+    function processFile(file) {
+      if (!file) return;
+      fname.textContent = file.name || 'pasted';
+      fsize.textContent = formatSize(file.size);
+      ftype.textContent = file.type || 'unknown';
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        // strip data:...;base64, prefix if present
+        const b64 = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
+        output.value = b64;
+        result.style.display = 'block';
+      };
+      reader.onerror = () => {
+        output.value = 'Error reading file';
+        result.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Click → file picker
+    dropzone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files[0]) processFile(fileInput.files[0]);
+      fileInput.value = '';
+    });
+
+    // Drag & drop
+    dropzone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropzone.classList.add('dragover');
+    });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+    dropzone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
+    });
+
+    // Ctrl+V paste
+    document.addEventListener('paste', e => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.kind === 'file') {
+          processFile(item.getAsFile());
+          return;
+        }
+      }
+    });
+
+    // Copy
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(output.value);
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1500);
+      } catch {
+        output.select();
+        document.execCommand('copy');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1500);
+      }
+    });
+
+    // Clear
+    clearBtn.addEventListener('click', () => {
+      output.value = '';
+      result.style.display = 'none';
+      fname.textContent = fsize.textContent = ftype.textContent = '—';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Quick Open",
+  "version": "1.2.2",
+  "description": "Local files and URLs in one gray list. Ctrl+Comma to toggle.",
+  "permissions": [
+    "storage",
+    "search"
+  ],
+  "host_permissions": [
+    "file:///*"
+  ],
+  "action": {
+    "default_title": "Quick Open (Ctrl+Comma)",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Comma",
+        "mac": "Command+Comma"
+      },
+      "description": "Open / close Quick Open"
+    }
+  }
+}
