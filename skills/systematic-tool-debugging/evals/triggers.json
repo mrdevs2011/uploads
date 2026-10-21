@@ -1,0 +1,9 @@
+{
+  "skill": "systematic-tool-debugging",
+  "test_cases": [
+    {"input": "The tool call failed with a 429 error, how should I recover?", "should_trigger": true},
+    {"input": "Debug this unexpected tool response that returned malformed data", "should_trigger": true},
+    {"input": "My agent keeps hitting timeouts on the same API call", "should_trigger": true},
+    {"input": "Write a Python function to calculate factorial", "should_trigger": false}
+  ]
+}
