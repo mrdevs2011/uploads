@@ -1,0 +1,25 @@
+{
+  "skill": "systematic-code-debugging",
+  "test_cases": [
+    {
+      "input": "Help me debug this TypeError: Cannot read property of undefined",
+      "should_trigger": true
+    },
+    {
+      "input": "I'm getting an IndexError in my Python list access",
+      "should_trigger": true
+    },
+    {
+      "input": "The app crashes with a NullPointerException on startup",
+      "should_trigger": true
+    },
+    {
+      "input": "Write a new React component for a login form",
+      "should_trigger": false
+    },
+    {
+      "input": "Explain how recursion works in algorithms",
+      "should_trigger": false
+    }
+  ]
+}
