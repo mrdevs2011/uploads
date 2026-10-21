@@ -2,23 +2,27 @@
   "skill": "systematic-debugging-workflow",
   "test_cases": [
     {
-      "input": "debug this error",
+      "input": "How do I systematically debug this stack trace?",
       "should_trigger": true
     },
     {
-      "input": "why is my test failing",
+      "input": "The test is flaky, help me find the root cause",
       "should_trigger": true
     },
     {
-      "input": "investigate the bug in the login flow",
+      "input": "My code crashes with an exception, walk me through debugging",
       "should_trigger": true
     },
     {
-      "input": "write a new feature for user profiles",
+      "input": "Write a Python function to sort a list",
       "should_trigger": false
     },
     {
-      "input": "optimize this algorithm for speed",
+      "input": "Explain how REST APIs work",
+      "should_trigger": false
+    },
+    {
+      "input": "Create a new React component",
       "should_trigger": false
     }
   ]
