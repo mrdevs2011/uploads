@@ -1,0 +1,35 @@
+{
+  "skill": "root-cause-debugging",
+  "test_cases": [
+    {
+      "name": "runtime_exception",
+      "input": "My Python script crashes with a TypeError when I pass a None value to a function that expects a string. Help me debug it.",
+      "assertions": [
+        "Classifies the symptom as a crash/exception",
+        "Asks for or inspects the stack trace and inputs",
+        "Forms hypotheses about null handling",
+        "Suggests a minimal reproduction and verification step before fixing"
+      ]
+    },
+    {
+      "name": "failing_unit_test",
+      "input": "This unit test started failing after the last commit. It used to pass. The assertion is comparing two lists that should be equal.",
+      "assertions": [
+        "Checks recent changes and reproduction steps",
+        "Gathers evidence from the test failure message",
+        "Ranks hypotheses (ordering, mutation, dependency)",
+        "Verifies the fix by re-running the specific test"
+      ]
+    },
+    {
+      "name": "unexpected_output",
+      "input": "The API returns the wrong total price for a shopping cart. It works for single items but fails when there are discounts.",
+      "assertions": [
+        "Classifies as incorrect output",
+        "Reduces to a minimal input that shows the wrong total",
+        "Inspects intermediate calculation values",
+        "Confirms root cause with an experiment before applying a fix"
+      ]
+    }
+  ]
+}
