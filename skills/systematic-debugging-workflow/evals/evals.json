@@ -1,0 +1,32 @@
+{
+  "skill": "systematic-debugging-workflow",
+  "test_cases": [
+    {
+      "name": "reproduce_and_isolate",
+      "input": "My API returns 500 on POST /users with valid JSON. Help me debug.",
+      "assertions": [
+        "Asks for or creates reproduction steps",
+        "Suggests gathering logs and stack trace",
+        "Proposes isolating the failing code path"
+      ]
+    },
+    {
+      "name": "hypothesis_testing",
+      "input": "Tests pass locally but fail in CI with timeout. Debug this.",
+      "assertions": [
+        "Forms a hypothesis about environment or timing",
+        "Recommends one change at a time",
+        "Suggests verifying after each experiment"
+      ]
+    },
+    {
+      "name": "root_cause_and_fix",
+      "input": "Null pointer exception in payment processing after recent change.",
+      "assertions": [
+        "Checks recent git changes",
+        "Adds regression test suggestion",
+        "Verifies fix does not break existing behavior"
+      ]
+    }
+  ]
+}
