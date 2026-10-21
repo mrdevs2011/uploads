@@ -1,0 +1,25 @@
+{
+  "skill": "systematic-error-triage",
+  "test_cases": [
+    {
+      "input": "help me debug this NullPointerException",
+      "should_trigger": true
+    },
+    {
+      "input": "why is this test flaky in CI",
+      "should_trigger": true
+    },
+    {
+      "input": "triage this production error",
+      "should_trigger": true
+    },
+    {
+      "input": "write a unit test for the login function",
+      "should_trigger": false
+    },
+    {
+      "input": "refactor this class to use dependency injection",
+      "should_trigger": false
+    }
+  ]
+}
