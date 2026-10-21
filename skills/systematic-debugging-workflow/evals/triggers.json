@@ -1,0 +1,25 @@
+{
+  "skill": "systematic-debugging-workflow",
+  "test_cases": [
+    {
+      "input": "debug this error",
+      "should_trigger": true
+    },
+    {
+      "input": "why is my test failing",
+      "should_trigger": true
+    },
+    {
+      "input": "investigate the bug in the login flow",
+      "should_trigger": true
+    },
+    {
+      "input": "write a new feature for user profiles",
+      "should_trigger": false
+    },
+    {
+      "input": "optimize this algorithm for speed",
+      "should_trigger": false
+    }
+  ]
+}
