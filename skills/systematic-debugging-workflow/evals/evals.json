@@ -2,30 +2,30 @@
   "skill": "systematic-debugging-workflow",
   "test_cases": [
     {
-      "name": "reproduce_and_isolate",
-      "input": "My API returns 500 on POST /users with valid JSON. Help me debug.",
+      "name": "null_attribute_error",
+      "input": "My Python script crashes with AttributeError: 'NoneType' object has no attribute 'id'. How do I debug this?",
       "assertions": [
-        "Asks for or creates reproduction steps",
-        "Suggests gathering logs and stack trace",
-        "Proposes isolating the failing code path"
+        "Recommends reproducing with minimal case",
+        "Suggests printing the value before the error",
+        "Follows the numbered workflow steps"
       ]
     },
     {
-      "name": "hypothesis_testing",
-      "input": "Tests pass locally but fail in CI with timeout. Debug this.",
+      "name": "flaky_test",
+      "input": "A test passes locally but fails intermittently in CI. Help me find the root cause.",
       "assertions": [
-        "Forms a hypothesis about environment or timing",
-        "Recommends one change at a time",
-        "Suggests verifying after each experiment"
+        "Mentions race conditions or environment differences",
+        "Suggests adding logging and reducing concurrency",
+        "Recommends writing a regression test"
       ]
     },
     {
-      "name": "root_cause_and_fix",
-      "input": "Null pointer exception in payment processing after recent change.",
+      "name": "performance_regression",
+      "input": "The API endpoint suddenly became 5x slower after the last deploy. Debug it systematically.",
       "assertions": [
-        "Checks recent git changes",
-        "Adds regression test suggestion",
-        "Verifies fix does not break existing behavior"
+        "Suggests checking git history and recent changes",
+        "Recommends profiling or timing logs",
+        "Advises verifying with measurements before and after the fix"
       ]
     }
   ]
