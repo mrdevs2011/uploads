@@ -1,0 +1,25 @@
+{
+  "skill": "tool-failure-debugging",
+  "test_cases": [
+    {
+      "name": "schema_validation_error",
+      "input": "The tool returned: missing required parameter 'path'. I was trying to read a file.",
+      "assertions": ["Classifies as Input validation", "Corrects the argument and retries once", "Does not enter a retry loop"]
+    },
+    {
+      "name": "rate_limit_429",
+      "input": "GitHub API returned 429 Too Many Requests after listing issues.",
+      "assertions": ["Classifies as Rate limit", "Applies backoff", "Retries at most once after waiting"]
+    },
+    {
+      "name": "timeout_on_large_payload",
+      "input": "The search tool timed out when I sent a 50-page document.",
+      "assertions": ["Classifies as Timeout", "Suggests simplifying or splitting the payload", "Does not blindly retry the same large call"]
+    },
+    {
+      "name": "auth_error",
+      "input": "Tool returned 401 Unauthorized.",
+      "assertions": ["Classifies as Auth", "Does not retry", "Surfaces clear re-auth guidance"]
+    }
+  ]
+}
