@@ -1,0 +1,20 @@
+{
+  "skill": "python-exception-triage",
+  "test_cases": [
+    {
+      "name": "type_error_fix",
+      "input": "Traceback shows TypeError: unsupported operand type(s) for +: 'int' and 'str'. Code does total = count + label.",
+      "assertions": ["Identifies TypeError as type mismatch", "Suggests converting label to int or using f-string", "Provides minimal corrected code"]
+    },
+    {
+      "name": "key_error_handling",
+      "input": "KeyError: 'user_id' when accessing response['user_id'] from an API that sometimes omits the field.",
+      "assertions": ["Classifies as missing resource", "Recommends .get() with default or explicit check", "Mentions fail-gracefully option"]
+    },
+    {
+      "name": "file_not_found",
+      "input": "FileNotFoundError when opening 'config.yaml' that should exist relative to the script.",
+      "assertions": ["Suggests pathlib.Path for absolute resolution", "Checks whether parent directory creation is appropriate", "Verifies fix with reproduction steps"]
+    }
+  ]
+}
