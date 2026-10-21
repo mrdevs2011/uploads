@@ -1,0 +1,29 @@
+{
+  "skill": "root-cause-debugging",
+  "test_cases": [
+    {
+      "input": "Debug this null pointer exception in my Java code",
+      "should_trigger": true
+    },
+    {
+      "input": "My tests are failing after the latest change, help me find the root cause",
+      "should_trigger": true
+    },
+    {
+      "input": "The function returns the wrong result for edge cases",
+      "should_trigger": true
+    },
+    {
+      "input": "Write a new sorting algorithm",
+      "should_trigger": false
+    },
+    {
+      "input": "Explain how React hooks work",
+      "should_trigger": false
+    },
+    {
+      "input": "Set up a new Git repository",
+      "should_trigger": false
+    }
+  ]
+}
