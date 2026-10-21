@@ -1,0 +1,25 @@
+{
+  "skill": "tool-failure-debugging",
+  "test_cases": [
+    {
+      "input": "the tool failed with an error",
+      "should_trigger": true
+    },
+    {
+      "input": "why is this API call timing out",
+      "should_trigger": true
+    },
+    {
+      "input": "agent is stuck retrying the same tool",
+      "should_trigger": true
+    },
+    {
+      "input": "how do I write a unit test",
+      "should_trigger": false
+    },
+    {
+      "input": "explain quantum computing",
+      "should_trigger": false
+    }
+  ]
+}
