@@ -1,0 +1,32 @@
+{
+  "skill": "systematic-code-debugging",
+  "test_cases": [
+    {
+      "name": "null_reference_error",
+      "input": "I'm getting a NullPointerException when calling getUser().getName() in this Java method. Here's the stack trace: ...",
+      "assertions": [
+        "Requests reproduction details and minimal example",
+        "Identifies possible null source and suggests null check or Optional",
+        "Includes verification step after fix"
+      ]
+    },
+    {
+      "name": "off_by_one_index",
+      "input": "My Python loop is throwing IndexError: list index out of range on the last element. Code: for i in range(len(items)): print(items[i+1])",
+      "assertions": [
+        "Reproduces by examining the loop bounds",
+        "Points out off-by-one error",
+        "Proposes corrected range or slice and verification"
+      ]
+    },
+    {
+      "name": "async_race_condition",
+      "input": "In my Node.js app, sometimes the database write happens before the read completes, causing missing data. Here's the async function.",
+      "assertions": [
+        "Asks for timing logs or sequence of calls",
+        "Suggests await or proper promise chaining",
+        "Recommends adding a test to verify order"
+      ]
+    }
+  ]
+}
