@@ -1,0 +1,32 @@
+{
+  "skill": "systematic-tool-debugging",
+  "test_cases": [
+    {
+      "name": "rate_limit_recovery",
+      "input": "The search tool returned 429 Too Many Requests. What should I do next?",
+      "assertions": [
+        "Classifies as rate limit",
+        "Recommends exponential backoff with jitter",
+        "Does not suggest immediate identical retry"
+      ]
+    },
+    {
+      "name": "malformed_json_response",
+      "input": "Tool returned success but the body is invalid JSON and cannot be parsed.",
+      "assertions": [
+        "Classifies as malformed response",
+        "Suggests validating schema or extracting partial data",
+        "Captures full response context first"
+      ]
+    },
+    {
+      "name": "persistent_5xx_after_retries",
+      "input": "The API tool failed with 503 three times in a row. Continue retrying?",
+      "assertions": [
+        "Identifies transient server error",
+        "Stops after 3 attempts",
+        "Recommends switching to alternative tool or approach"
+      ]
+    }
+  ]
+}
