@@ -1,0 +1,34 @@
+{
+  "skill": "systematic-error-triage",
+  "test_cases": [
+    {
+      "name": "null_pointer_stack_trace",
+      "input": "I got this error: NullPointerException at UserService.java:42 when calling getUser(null). Stack trace points to the null check that was supposed to exist.",
+      "assertions": [
+        "Classifies as Type/Contract or Logic",
+        "Forms a hypothesis about missing null guard at call site",
+        "Suggests a verification step (assert or unit test)",
+        "Recommends both the fix and a regression test"
+      ]
+    },
+    {
+      "name": "intermittent_timeout",
+      "input": "API calls sometimes fail with timeout after 30s, but only under load. Locally it always works.",
+      "assertions": [
+        "Classifies as Concurrency or Resource or External",
+        "Asks for or notes missing correlation / load context",
+        "Hypothesis involves pool exhaustion or external rate limit",
+        "Verification involves reproducing under controlled load"
+      ]
+    },
+    {
+      "name": "works_locally_fails_ci",
+      "input": "Tests pass on my machine but fail in CI with 'module not found'.",
+      "assertions": [
+        "Classifies as Environment",
+        "Hypothesis about missing dependency or path difference",
+        "Suggests comparing lockfiles or env between local and CI"
+      ]
+    }
+  ]
+}
