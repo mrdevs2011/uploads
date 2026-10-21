@@ -1,0 +1,25 @@
+{
+  "skill": "python-exception-triage",
+  "test_cases": [
+    {
+      "input": "debug this Python traceback and fix the exception",
+      "should_trigger": true
+    },
+    {
+      "input": "why is my Python script crashing with TypeError",
+      "should_trigger": true
+    },
+    {
+      "input": "analyze the stack trace and suggest a fix",
+      "should_trigger": true
+    },
+    {
+      "input": "write a new Python function to sort a list",
+      "should_trigger": false
+    },
+    {
+      "input": "explain how decorators work in Python",
+      "should_trigger": false
+    }
+  ]
+}
